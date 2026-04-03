@@ -1,0 +1,41 @@
+name: Playwright Tests
+# ☝️ Name of this automation pipeline
+
+on:
+  push:
+    branches: [main]
+# ☝️ Run this pipeline every time you push code to GitHub
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # ☝️ Use a fresh Linux computer on GitHub to run tests
+
+    steps:
+      - uses: actions/checkout@v4
+        # ☝️ Download your code from GitHub onto that computer
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+        # ☝️ Install Node.js (Playwright needs this to work)
+
+      - name: Install dependencies
+        run: npm install
+        # ☝️ Install all your project tools (like npm install on your PC)
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        # ☝️ Install Chrome browser on GitHub's computer
+
+      - name: Run tests
+        run: npx playwright test
+        # ☝️ Run all your tests!
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+        # ☝️ Save the test report so you can download and see results
